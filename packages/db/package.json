@@ -1,5 +1,5 @@
 {
-  "name": "@repo-paytm/db",
+  "name": "@repo/db",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,5 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^5.14.0"
+  },
+  "exports": {
+    "./client": "./index.ts"
   }
 }

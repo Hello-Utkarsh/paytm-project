@@ -5,6 +5,7 @@ import { Center } from "@repo/ui/center";
 import { Select } from "@repo/ui/select";
 import { useState } from "react";
 import { TextInput } from "@repo/ui/textinput";
+import OnRampTransaction from "../app/lib/actions/OnRampTransaction";
 
 const SUPPORTED_BANKS = [{
     name: "HDFC Bank",
@@ -14,29 +15,35 @@ const SUPPORTED_BANKS = [{
     redirectUrl: "https://www.axisbank.com/"
 }];
 
+
 export const AddMoney = () => {
     const [redirectUrl, setRedirectUrl] = useState(SUPPORTED_BANKS[0]?.redirectUrl);
-    return <Card title="Add Money">
-    <div className="w-full">
-        <TextInput label={"Amount"} placeholder={"Amount"} onChange={() => {
+    const [bank, setBank] = useState(SUPPORTED_BANKS[0]?.name || "")
+    const [amount, setAmount] = useState("")
 
-        }} />
-        <div className="py-4 text-left">
-            Bank
+    return <Card title="Add Money">
+        <div className="w-full">
+            <TextInput label={"Amount"} placeholder={"Amount"} onChange={(e) => {
+                setAmount(e)
+            }} />
+            <div className="py-4 text-left">
+                Bank
+            </div>
+            <Select onSelect={(value) => {
+                setBank(SUPPORTED_BANKS.find(x => x.name === value)?.name || "")
+                setRedirectUrl(SUPPORTED_BANKS.find(x => x.name === value)?.redirectUrl || "")
+            }} options={SUPPORTED_BANKS.map(x => ({
+                key: x.name,
+                value: x.name
+            }))} />
+            <div className="flex justify-center pt-4">
+                <Button onClick={() => {
+                    window.location.href = redirectUrl || "";
+                    OnRampTransaction(amount, bank)
+                }}>
+                    Add Money
+                </Button>
+            </div>
         </div>
-        <Select onSelect={(value) => {
-            setRedirectUrl(SUPPORTED_BANKS.find(x => x.name === value)?.redirectUrl || "")
-        }} options={SUPPORTED_BANKS.map(x => ({
-            key: x.name,
-            value: x.name
-        }))} />
-        <div className="flex justify-center pt-4">
-            <Button onClick={() => {
-                window.location.href = redirectUrl || "";
-            }}>
-            Add Money
-            </Button>
-        </div>
-    </div>
-</Card>
+    </Card>
 }
